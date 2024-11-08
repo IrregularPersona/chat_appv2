@@ -1,4 +1,3 @@
-# models.py
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin

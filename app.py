@@ -23,10 +23,8 @@ def load_user(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # Correctly retrieve the username and password with `.data`
         user = User.query.filter_by(username=form.username.data).first()
         
-        # Check if the user exists and the password matches
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
             flash('Logged in successfully!', 'success')
@@ -35,7 +33,6 @@ def login():
             flash('Login Unsuccessful. Check username and password.', 'danger')
     return render_template('login.html', form=form)
 
-# Initialize tables when the app starts
 with app.app_context():
     db.create_all()
     

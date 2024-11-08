@@ -1,0 +1,29 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.username.label }}
+                {{ form.username(class="form-input") }}
+            </div>
+            <div>
+                {{ form.password.label }}
+                {{ form.password(class="form-input") }}
+            </div>
+            <div>
+                {{ form.submit(class="form-button") }}
+            </div>
+        </form>
+        <p>Don’t have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
+    </div>
+</body>
+</html>

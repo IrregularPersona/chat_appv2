@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
+        <div class="messages">
+            <ul>
+                {% for message in messages %}
+                    <li class="message">
+                        <strong>{{ message.user.username }}:</strong> {{ message.text }}
+                        <em>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</em>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <form method="POST" action="{{ url_for('chat') }}" class="input-form">
+            {{ form.hidden_tag() }}
+            {{ form.text(class="non-resizable input-box", rows=2, placeholder="Type your message here...") }}
+            {{ form.submit(class="send-button") }}
+        </form>
+        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,121 @@
+/* static/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-container {
+    width: 60%;
+    max-width: 800px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    text-align: center;
+    padding: 10px;
+    background-color: #2b2b2b;
+    margin: 0;
+    color: #ffffff;
+}
+
+.messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border-bottom: 1px solid #444;
+}
+
+.messages ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.message {
+    padding: 10px;
+    background-color: #333;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #d3d3d3;
+    display: flex;
+    justify-content: space-between;
+}
+
+.message strong {
+    color: #ffa726;
+}
+
+.message em {
+    color: #9e9e9e;
+    font-size: 0.9em;
+}
+
+.input-form {
+    display: flex;
+    padding: 10px;
+    background-color: #2b2b2b;
+}
+
+.input-box {
+    flex: 1;
+    padding: 10px;
+    background-color: #3a3a3a;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #e0e0e0;
+    resize: none;
+    margin-right: 10px;
+}
+
+.send-button {
+    background-color: #ffa726;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.send-button:hover {
+    background-color: #ff9800;
+}
+
+.logout {
+    text-align: center;
+    display: block;
+    color: #ffa726;
+    text-decoration: none;
+    padding: 10px;
+    background-color: #2b2b2b;
+    border-top: 1px solid #444;
+}
+
+.logout:hover {
+    color: #ff9800;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #2b2b2b;
+}

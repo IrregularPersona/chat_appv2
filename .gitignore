@@ -1,0 +1,4 @@
+/venv
+/instance/chat.db
+/__pycache__
+.env

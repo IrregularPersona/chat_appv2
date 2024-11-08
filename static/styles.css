@@ -1,0 +1,70 @@
+/* static/styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0; /* Light text for contrast */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.form-container {
+    background-color: #1e1e1e; /* Dark form background */
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6); /* Soft shadow for a sleek look */
+    width: 300px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 1em;
+    color: #ffffff; /* White text for the header */
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.5em;
+    margin: 0.5em 0;
+    background-color: #333; /* Dark background for input */
+    color: #e0e0e0; /* Light text for input */
+    border: 1px solid #555; /* Slightly lighter border */
+    border-radius: 4px;
+}
+
+.form-input:focus {
+    border-color: #ffa726; /* Highlight border color when focused */
+    outline: none;
+}
+
+.form-button {
+    width: 100%;
+    padding: 0.5em;
+    background-color: #ffa726; /* Orange button */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.form-button:hover {
+    background-color: #ff9800; /* Slightly darker orange on hover */
+}
+
+a {
+    color: #ffa726; /* Use the same orange for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #ff9800; /* Highlight color when hovering over the link */
+}
+
+p {
+    color: #cccccc; /* Light gray text for the paragraph */
+}
+

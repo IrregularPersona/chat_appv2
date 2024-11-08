@@ -1,8 +1,10 @@
-/* static/styles.css */
+body, .form-container {
+    font-family: 'Nunito', sans-serif !important;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #121212; /* Dark background */
-    color: #e0e0e0; /* Light text for contrast */
+    background-color: #121212; 
+    color: #e0e0e0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,38 +13,39 @@ body {
 }
 
 .form-container {
-    background-color: #1e1e1e; /* Dark form background */
+    background-color: #1e1e1e; 
     padding: 2em;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6); /* Soft shadow for a sleek look */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6); 
     width: 300px;
     text-align: center;
 }
 
 h2 {
     margin-bottom: 1em;
-    color: #ffffff; /* White text for the header */
+    color: #ffffff;
 }
 
 .form-input {
-    width: 100%;
+    width: 90%;
     padding: 0.5em;
-    margin: 0.5em 0;
-    background-color: #333; /* Dark background for input */
-    color: #e0e0e0; /* Light text for input */
-    border: 1px solid #555; /* Slightly lighter border */
+    margin: 0.55em 0;
+    background-color: #333;
+    color: #e0e0e0; 
+    border: 1px solid #555; 
     border-radius: 4px;
 }
 
 .form-input:focus {
-    border-color: #ffa726; /* Highlight border color when focused */
+    border-color: #ffa726; 
     outline: none;
 }
 
 .form-button {
-    width: 100%;
+    width: 65%;
+    margin-top: 0.5em;
     padding: 0.5em;
-    background-color: #ffa726; /* Orange button */
+    background-color: #ffa726; 
     color: #ffffff;
     border: none;
     border-radius: 4px;
@@ -51,20 +54,20 @@ h2 {
 }
 
 .form-button:hover {
-    background-color: #ff9800; /* Slightly darker orange on hover */
+    background-color: #ff9800; 
 }
 
 a {
-    color: #ffa726; /* Use the same orange for links */
+    color: #ffa726;
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-    color: #ff9800; /* Highlight color when hovering over the link */
+    color: #ff9800;
 }
 
 p {
-    color: #cccccc; /* Light gray text for the paragraph */
+    color: #cccccc; 
 }
 

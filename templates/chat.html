@@ -38,28 +38,4 @@
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
-<script>
-  const socket = io('/chat');
-
-  socket.on('connect', () => {
-    console.log('Connected to the chat namespace');
-  });
-
-  socket.on('new_message', (data) => {
-    const messageContainer = document.createElement('div');
-    messageContainer.classList.add('message-bubble');
-
-    const messageHeader = document.createElement('div');
-    messageHeader.classList.add('message-header');
-    messageHeader.innerHTML = `<strong>${data.username}</strong> [${data.timestamp}]`;
-
-    const messageText = document.createElement('p');
-    messageText.textContent = data.text;
-
-    messageContainer.appendChild(messageHeader);
-    messageContainer.appendChild(messageText);
-
-    document.querySelector('.messages').appendChild(messageContainer);
-  });
-</script>
 </html>

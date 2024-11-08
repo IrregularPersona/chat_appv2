@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -6,11 +5,14 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from models import db, User, Message
 from forms import LoginForm, RegisterForm, MessageForm
 from config import Config
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 bcrypt = Bcrypt(app)
+
+socketio = SocketIO(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -68,10 +70,23 @@ def chat():
         message = Message(text=form.text.data, user=current_user)
         db.session.add(message)
         db.session.commit()
-        flash('Message sent!', 'success')
+        socketio.emit('new_message', {
+            'username': current_user.username,
+            'text': form.text.data,
+            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }, namespace='/chat')
+        form.text.data = ''
         return redirect(url_for('chat'))
     messages = Message.query.order_by(Message.timestamp.asc()).all()
     return render_template('chat.html', form=form, messages=messages)
 
+@socketio.on('connect', namespace='/chat')
+def handle_connect():
+    print(f'{request.sid} connected to the chat namespace')
+
+@socketio.on('disconnect', namespace='/chat')
+def handle_disconnect():
+    print(f'{request.sid} disconnected from the chat namespace')
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

@@ -3,27 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat Room</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </head>
 <body>
-    <div class="chat-container">
+    <div class="chat-container" data-username="{{ current_user.username }}">
         <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
-        <div class="messages">
-            <ul>
-                {% for message in messages %}
-                    <li class="message">
-                        <strong>{{ message.user.username }}:</strong> {{ message.text }}
-                        <em>{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</em>
-                    </li>
-                {% endfor %}
-            </ul>
+        <div class="chat-content">
+            <div class="messages">
+                <ul>
+                    {% for message in messages %}
+                        <li class="message">
+                            <div class="message-bubble">
+                                <div class="message-header">
+                                    <strong>{{ message.user.username }}</strong>
+                                    <span class="timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                                </div>
+                                <p>{{ message.text }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <form method="POST" action="{{ url_for('chat') }}" class="input-form">
+                {{ form.hidden_tag() }}
+                {{ form.text(class="non-resizable input-box", rows=2, placeholder="Type your message here...") }}
+                {{ form.submit(class="send-button") }}
+            </form>
         </div>
-        <form method="POST" action="{{ url_for('chat') }}" class="input-form">
-            {{ form.hidden_tag() }}
-            {{ form.text(class="non-resizable input-box", rows=2, placeholder="Type your message here...") }}
-            {{ form.submit(class="send-button") }}
-        </form>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+<script>
+  const socket = io('/chat');
+
+  socket.on('connect', () => {
+    console.log('Connected to the chat namespace');
+  });
+
+  socket.on('new_message', (data) => {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-bubble');
+
+    const messageHeader = document.createElement('div');
+    messageHeader.classList.add('message-header');
+    messageHeader.innerHTML = `<strong>${data.username}</strong> [${data.timestamp}]`;
+
+    const messageText = document.createElement('p');
+    messageText.textContent = data.text;
+
+    messageContainer.appendChild(messageHeader);
+    messageContainer.appendChild(messageText);
+
+    document.querySelector('.messages').appendChild(messageContainer);
+  });
+</script>
 </html>

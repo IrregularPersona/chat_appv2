@@ -57,6 +57,11 @@ h2 {
     margin-bottom: 10px;
 }
 
+/* For Every Chatbox That Belongs To User */
+.right{
+    justify-content: flex-end;
+}
+
 .message-bubble {
     padding: 10px;
     border-radius: 15px;

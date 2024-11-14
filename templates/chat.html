@@ -19,13 +19,13 @@
                         <li class="message">
                             <div class="message-bubble">
                                 <div class="message-header">
-                                    <strong>{{ message.user.username }}</strong>
+                                    <strong data-user="{{ message.user.username }}">{{ message.user.username }}</strong>
                                     <span class="timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
                                 </div>
                                 <p>{{ message.text }}</p>
                             </div>
                         </li>
-                    {% endfor %}
+                    {% endfor %}    
                 </ul>
             </div>
             <form method="POST" action="{{ url_for('chat') }}" class="input-form">

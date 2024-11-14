@@ -1,18 +1,15 @@
 window.onload = function(){
+  
+  //Scroll To Bottom
   const lastMessage = document.querySelector(".messages ul li.message:last-child");
   
   if(lastMessage){
     lastMessage.scrollIntoView({behavior: 'smooth'});
   }
-};
+
+  //Highlight Username (Progress)
   const messagesContainer = document.querySelector('.messages');
-  
-  function scrollToBottom() {
-    setTimeout(() => {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 100);
-  }
-  
+   
   const currentUser = document.querySelector('.chat-container').dataset.username;
   
   socket.on('new_message', (data) => {
@@ -34,6 +31,5 @@ window.onload = function(){
     messageContainer.appendChild(messageText);
   
     document.querySelector('.messages').appendChild(messageContainer);
-    scrollToBottom();
   });
- 
+};

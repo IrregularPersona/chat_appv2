@@ -1,25 +1,32 @@
-const messagesContainer = document.querySelector('.messages');
-
-function scrollToBottom() {
+window.onload = function(){
+  const lastMessage = document.querySelector(".messages ul li.message:last-child");
+  
+  if(lastMessage){
+    lastMessage.scrollIntoView({behavior: 'smooth'});
+  }
+};
+  const messagesContainer = document.querySelector('.messages');
+  
+  function scrollToBottom() {
     setTimeout(() => {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }, 100);
   }
-
-const currentUser = document.querySelector('.chat-container').dataset.username;
-
-socket.on('new_message', (data) => {
-  const messageContainer = document.createElement('div');
-  messageContainer.classList.add('message-bubble');
-
-  if (data.username === currentUser) {
+  
+  const currentUser = document.querySelector('.chat-container').dataset.username;
+  
+  socket.on('new_message', (data) => {
+    const messageContainer = document.createElement('div');
+    messageContainer.classList.add('message-bubble');
+    
+    if (data.username === currentUser) {
     messageContainer.classList.add('self');
   }
   
     const messageHeader = document.createElement('div');
     messageHeader.classList.add('message-header');
     messageHeader.innerHTML = `<strong>${data.username}</strong> [${data.timestamp}]`;
-  
+    
     const messageText = document.createElement('p');
     messageText.textContent = data.text;
   
@@ -29,3 +36,4 @@ socket.on('new_message', (data) => {
     document.querySelector('.messages').appendChild(messageContainer);
     scrollToBottom();
   });
+ 

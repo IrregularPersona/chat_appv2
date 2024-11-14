@@ -80,6 +80,10 @@ def chat():
     messages = Message.query.order_by(Message.timestamp.asc()).all()
     return render_template('chat.html', form=form, messages=messages)
 
+@socketio.on('send_message')
+def handle_message(data):
+    emit('receive_message', data, broadcast=True)
+
 @socketio.on('connect', namespace='/chat')
 def handle_connect():
     print(f'{request.sid} connected to the chat namespace')

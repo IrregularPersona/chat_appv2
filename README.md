@@ -19,6 +19,6 @@ and this should work instantly
 - [X] Message Timestamp
 - [X] Message Bubbles
 - [X] Messages to DB
-- [X] Real-time update of messages
-- [ ] Auto-Scroll per new message
+- [ ] Real-time update of messages
+- [X] Auto-Scroll per new message
 - [ ] Color change between Self and other user

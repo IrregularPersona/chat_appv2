@@ -8,34 +8,43 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
 </head>
 <body>
     <div class="chat-container" data-username="{{ current_user.username }}">
         <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
         <div class="chat-content">
             <div class="messages">
-                <ul>
-                    {% for message in messages %}
-                        <li class="message">
-                            <div class="message-bubble">
-                                <div class="message-header">
-                                    <strong data-user="{{ message.user.username }}">{{ message.user.username }}</strong>
-                                    <span class="timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
-                                </div>
-                                <p>{{ message.text }}</p>
-                            </div>
-                        </li>
-                    {% endfor %}    
+                <ul id="message-list">
+                    
                 </ul>
             </div>
-            <form method="POST" action="{{ url_for('chat') }}" class="input-form">
-                {{ form.hidden_tag() }}
-                {{ form.text(class="non-resizable input-box", rows=2, placeholder="Type your message here...") }}
-                {{ form.submit(class="send-button") }}
-            </form>
+            <textarea id="message-input" placeholder="Type your message here..."></textarea>
+            <button onclick="sendMessage()">Send</button>
         </div>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
+    <script>
+        const socket = io.connect();
+    
+        // Listen for messages from the server
+        socket.on('receive_message', (data) => {
+            const messageList = document.getElementById('message-list');
+            const messageItem = document.createElement('li');
+            messageItem.innerHTML = `<strong>${data.username}</strong>: ${data.message}`;
+            messageList.appendChild(messageItem);
+        });
+    
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value;
+            const username = "{{ current_user.username }}";
+            if (message.trim()) {
+                // Emit a message to the server
+                socket.emit('send_message', { username: username, message: message });
+                messageInput.value = '';
+            }
+        }
+    </script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
 </html>

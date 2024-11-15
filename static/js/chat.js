@@ -2,7 +2,6 @@ window.onload = function(){
   
   //Scroll To Bottom
   const lastMessage = document.querySelector(".messages ul li:last-child");
-  console.log(lastMessage);
   if(lastMessage){
     lastMessage.scrollIntoView({behavior: 'smooth'});
   }

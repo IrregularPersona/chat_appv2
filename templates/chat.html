@@ -65,7 +65,19 @@
 
         socket.on('receive_message', (data) => {
             const messageItem = document.createElement('li');
-            const messageTime = convertToGMTPlus7(data.timestamp);
+
+            const userTime = new Date().getHours(); // Get the user current hour 
+            const serverTime = new Date().getUTCHours(); // Get the server current hour
+            const timeDiff = userTime - serverTime; // Getting the diffrence between server and user
+
+            const tempTime = new Date(data.timestamp);
+            tempTime.setHours(tempTime.getHours() + timeDiff); // Set the hour + timeDiff
+            const messageTime = tempTime.toLocaleTimeString('en-Us', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }); // Convert it to String
+            // const messageTime = convertToGMTPlus7(data.timestamp);
             messageItem.innerHTML = `
                 <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-container ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
@@ -87,7 +99,13 @@
         function sendMessage() {
             const message = messageInput.value;
             const username = "{{ current_user.username }}";
-            const timestamp = new Date().toISOString(); // Let User Send The Message Time By Server Time
+
+            const userTime = new Date().getHours(); // Get the user current hour 
+            const serverTime = new Date().getUTCHours(); // Get the server current hour
+            const timeDiff = userTime - serverTime; // Getting the diffrence between server and user
+            let timestamp = new Date(); // Let User Send The Message Time By Server Time
+            timestamp.setHours(timestamp.getHours() - timeDiff); // Set The Time Become Server Time
+
             if (message.trim()) {
                 console.log(`Sending message => ${message}`); 
                 socket.emit('send_message', { username: username, message: message, timestamp: timestamp });

@@ -32,6 +32,7 @@
         const socket = io.connect();
         const existingMessages = {{ existing_messages | tojson | safe}};
         const messageList = document.getElementById('message-list');
+ 
         let prevTime = -69;
         let prevDate = new Date().toLocaleDateString('en-Us', {
             weekday: 'long',    
@@ -39,12 +40,13 @@
                 month: 'long',
                 year: 'numeric'
             });
-        existingMessages.forEach(msg => {
-            const messageItem = document.createElement('li');
-
-            // Comparing Server and User Time
+            
+            existingMessages.forEach(msg => {
+                const messageItem = document.createElement('li');
+                
+                // Comparing Server and User Time
             // Server time uses toISOString, so its UTC +0
-
+            
             const userTime = new Date().getHours(); // Get the user current hour 
             const serverTime = new Date().getUTCHours(); // Get the server current hour
             const timeDiff = userTime - serverTime; // Getting the diffrence between server and user
@@ -64,22 +66,30 @@
                 month: 'long',
                 year: "numeric"
             });
+            
+            if(prevTime < 0){
+                prevTime = tempTime;
+            }
+            const m1 = tempTime.getMinutes() + (tempTime.getHours() * 60);
+            const m2 = prevTime.getMinutes() + (prevTime.getHours() * 60);
 
-
+            if(m1 - m2 < 0){
+                prevTime = tempTime;
+            }
             messageItem.innerHTML = `
             <center>${prevDate === messageDate ? '' : messageDate}</center>
             <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
                 <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    ${prevTime === tempTime.getMinutes() ? '' : `<div class="message-header"><strong data-user="${msg.username}">${msg.username}</strong><span class="timestamp">${messageTime}</span></div>`}
+                    ${m1 - m2 <= 5 ? '' : `<div class="message-header"><strong data-user="${msg.username}">${msg.username}</strong><span class="timestamp">${messageTime}</span></div>`}
                     <div class="message-bubble ${msg.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${msg.message}</p>
                     </div>
                 </div>
-            </div>`;
-            prevTime = tempTime.getMinutes();
+                </div>`;
+            if(m1 - m2 > 5){
+                prevTime = tempTime;
+            }
             prevDate = messageDate;
-            console.log("PrevTime = " + prevTime);
-            console.log("TempTime = " + tempTime.getMinutes());
             messageList.appendChild(messageItem);
         });
 
@@ -105,18 +115,28 @@
                 month: 'long',
                 year: "numeric"
             });
+            if(prevTime < 0){
+                prevTime = tempTime;
+            }
+            const m1 = tempTime.getMinutes() + (tempTime.getHours() * 60);
+            const m2 = prevTime.getMinutes() + (prevTime.getHours() * 60);
 
+            if(m1 - m2 < 0){
+                prevTime = tempTime;
+            }
             messageItem.innerHTML = `
             <center>${prevDate === messageDate ? '' : messageDate}</center>
                 <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-container ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
-                        ${prevTime === tempTime.getMinutes() ? '' : `<div class="message-header"><strong data-user="${data.username}">${data.username}</strong><span class="timestamp">${messageTime}</span></div>`}
+                        ${m1 - m2 <= 5 ? '' : `<div class="message-header"><strong data-user="${data.username}">${data.username}</strong><span class="timestamp">${messageTime}</span></div>`}
                     <div class="message-bubble ${data.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${data.message}</p>
                     </div>
                     </div>
                 </div>`;
-                prevTime = tempTime.getMinutes();
+            if(m1 - m2 > 5){
+                prevTime = tempTime;
+            }
             prevDate = messageDate;
             messageList.appendChild(messageItem);
             scrollToBottom();

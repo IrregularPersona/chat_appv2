@@ -36,4 +36,4 @@ function convertToGMTPlus7(utcDateString) {
   const gmtPlus7Offset = 7 * 60 * 60 * 1000;
   const gmtPlus7Date = new Date(date.getTime() + gmtPlus7Offset);
   return gmtPlus7Date.toLocaleTimeString(); 
-  }
+}

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Chat Room</title>
@@ -8,13 +9,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="chat-container" data-username="{{ current_user.username }}">
         <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
         <div class="chat-content">
             <div class="messages">
                 <ul id="message-list">
-                    
+
                 </ul>
             </div>
             <div class="input-form">
@@ -28,8 +30,15 @@
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     <script>
         const socket = io.connect();
-        const existingMessages = {{ existing_messages | tojson | safe }};
+        const existingMessages = {{ existing_messages | tojson | safe}};
         const messageList = document.getElementById('message-list');
+        let prevTime = -69;
+        let prevDate = new Date().toLocaleDateString('en-Us', {
+            weekday: 'long',    
+            day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
         existingMessages.forEach(msg => {
             const messageItem = document.createElement('li');
 
@@ -48,18 +57,29 @@
                 hour12: false
             }); // Convert it to String
 
+            const tempDate = tempTime;
+            const messageDate = tempDate.toLocaleDateString('en-Us', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: "numeric"
+            });
+
+
             messageItem.innerHTML = `
-                <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    <div class="message-header">
-                        <strong data-user="${msg.username}">${msg.username}</strong>
-                        <span class="timestamp">${messageTime}</span>
-                    </div>
+            <center>${prevDate === messageDate ? '' : messageDate}</center>
+            <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
+                <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
+                    ${prevTime === tempTime.getMinutes() ? '' : `<div class="message-header"><strong data-user="${msg.username}">${msg.username}</strong><span class="timestamp">${messageTime}</span></div>`}
                     <div class="message-bubble ${msg.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${msg.message}</p>
                     </div>
-                    </div>
-                </div>`;
+                </div>
+            </div>`;
+            prevTime = tempTime.getMinutes();
+            prevDate = messageDate;
+            console.log("PrevTime = " + prevTime);
+            console.log("TempTime = " + tempTime.getMinutes());
             messageList.appendChild(messageItem);
         });
 
@@ -77,25 +97,34 @@
                 minute: '2-digit',
                 hour12: false
             }); // Convert it to String
-            // const messageTime = convertToGMTPlus7(data.timestamp);
+
+            const tempDate = tempTime;
+            const messageDate = tempDate.toLocaleDateString('en-Us', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: "numeric"
+            });
+
             messageItem.innerHTML = `
+            <center>${prevDate === messageDate ? '' : messageDate}</center>
                 <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-container ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    <div class="message-header">
-                        <strong data-user="${data.username}">${data.username}</strong>
-                        <span class="timestamp">${messageTime}</span>
-                    </div>
+                        ${prevTime === tempTime.getMinutes() ? '' : `<div class="message-header"><strong data-user="${data.username}">${data.username}</strong><span class="timestamp">${messageTime}</span></div>`}
                     <div class="message-bubble ${data.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${data.message}</p>
                     </div>
                     </div>
                 </div>`;
+                prevTime = tempTime.getMinutes();
+            prevDate = messageDate;
             messageList.appendChild(messageItem);
-            scrollToBottom();   
+            scrollToBottom();
         });
-    
+
 
         const messageInput = document.getElementById('message-input');
+
         function sendMessage() {
             const message = messageInput.value;
             const username = "{{ current_user.username }}";
@@ -107,8 +136,12 @@
             timestamp.setHours(timestamp.getHours() - timeDiff); // Set The Time Become Server Time
 
             if (message.trim()) {
-                console.log(`Sending message => ${message}`); 
-                socket.emit('send_message', { username: username, message: message, timestamp: timestamp });
+                console.log(`Sending message => ${message}`);
+                socket.emit('send_message', {
+                    username: username,
+                    message: message,
+                    timestamp: timestamp
+                });
                 messageInput.value = '';
             }
         }
@@ -130,4 +163,5 @@
         scrollToBottom();
     </script>
 </body>
+
 </html>

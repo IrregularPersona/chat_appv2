@@ -2,7 +2,6 @@ window.onload = function(){
   
   //Scroll To Bottom
   const lastMessage = document.querySelector(".messages ul li:last-child");
-  console.log(lastMessage);
   if(lastMessage){
     lastMessage.scrollIntoView({behavior: 'smooth'});
   }
@@ -31,9 +30,9 @@ function scrollToBottom() {
   }
 }
 
-function convertToGMTPlus7(utcDateString) {
-  const date = new Date(utcDateString);
-  const gmtPlus7Offset = 7 * 60 * 60 * 1000;
-  const gmtPlus7Date = new Date(date.getTime() + gmtPlus7Offset);
-  return gmtPlus7Date.toLocaleTimeString(); 
-}
+// function convertToGMTPlus7(utcDateString) {
+//   const date = new Date(utcDateString);
+//   const gmtPlus7Offset = 7 * 60 * 60 * 1000;
+//   const gmtPlus7Date = new Date(date.getTime() + gmtPlus7Offset);
+//   return gmtPlus7Date.toLocaleTimeString(); 
+//   }

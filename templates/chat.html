@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Chat Room</title>
@@ -8,13 +9,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="chat-container" data-username="{{ current_user.username }}">
         <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
         <div class="chat-content">
             <div class="messages">
                 <ul id="message-list">
-                    
+
                 </ul>
             </div>
             <div class="input-form">
@@ -28,54 +30,138 @@
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     <script>
         const socket = io.connect();
-        const existingMessages = {{ existing_messages | tojson | safe }};
+        const existingMessages = {{ existing_messages | tojson | safe}};
         const messageList = document.getElementById('message-list');
-        existingMessages.forEach(msg => {
-            const messageItem = document.createElement('li');
-            const messageTime = new Date(msg.timestamp).toLocaleTimeString();
+ 
+        let prevTime = -69;
+        let prevDate = new Date().toLocaleDateString('en-Us', {
+            weekday: 'long',    
+            day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            existingMessages.forEach(msg => {
+                const messageItem = document.createElement('li');
+                
+                // Comparing Server and User Time
+            // Server time uses toISOString, so its UTC +0
+            
+            const userTime = new Date().getHours(); // Get the user current hour 
+            const serverTime = new Date().getUTCHours(); // Get the server current hour
+            const timeDiff = userTime - serverTime; // Getting the diffrence between server and user
+
+            const tempTime = new Date(msg.timestamp);
+            tempTime.setHours(tempTime.getHours() + timeDiff); // Set the hour + timeDiff
+            const messageTime = tempTime.toLocaleTimeString('en-Us', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }); // Convert it to String
+
+            const tempDate = tempTime;
+            const messageDate = tempDate.toLocaleDateString('en-Us', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: "numeric"
+            });
+            
+            if(prevTime < 0){
+                prevTime = tempTime;
+            }
+            const m1 = tempTime.getMinutes() + (tempTime.getHours() * 60);
+            const m2 = prevTime.getMinutes() + (prevTime.getHours() * 60);
+
+            if(m1 - m2 < 0){
+                prevTime = tempTime;
+            }
             messageItem.innerHTML = `
-                <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    <div class="message-header">
-                        <strong data-user="${msg.username}">${msg.username}</strong>
-                        <span class="timestamp">${messageTime}</span>
-                    </div>
+            <center>${prevDate === messageDate ? '' : messageDate}</center>
+            <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
+                <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
+                    ${m1 - m2 <= 5 ? '' : `<div class="message-header"><strong data-user="${msg.username}">${msg.username}</strong><span class="timestamp">${messageTime}</span></div>`}
                     <div class="message-bubble ${msg.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${msg.message}</p>
                     </div>
-                    </div>
+                </div>
                 </div>`;
+            if(m1 - m2 > 5){
+                prevTime = tempTime;
+            }
+            prevDate = messageDate;
             messageList.appendChild(messageItem);
         });
 
         socket.on('receive_message', (data) => {
             const messageItem = document.createElement('li');
-            const messageTime = convertToGMTPlus7(data.timestamp);
+
+            const userTime = new Date().getHours(); // Get the user current hour 
+            const serverTime = new Date().getUTCHours(); // Get the server current hour
+            const timeDiff = userTime - serverTime; // Getting the diffrence between server and user
+
+            const tempTime = new Date(data.timestamp);
+            tempTime.setHours(tempTime.getHours() + timeDiff); // Set the hour + timeDiff
+            const messageTime = tempTime.toLocaleTimeString('en-Us', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }); // Convert it to String
+
+            const tempDate = tempTime;
+            const messageDate = tempDate.toLocaleDateString('en-Us', {
+                weekday: 'long',
+                day: '2-digit',
+                month: 'long',
+                year: "numeric"
+            });
+            if(prevTime < 0){
+                prevTime = tempTime;
+            }
+            const m1 = tempTime.getMinutes() + (tempTime.getHours() * 60);
+            const m2 = prevTime.getMinutes() + (prevTime.getHours() * 60);
+
+            if(m1 - m2 < 0){
+                prevTime = tempTime;
+            }
             messageItem.innerHTML = `
+            <center>${prevDate === messageDate ? '' : messageDate}</center>
                 <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-container ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    <div class="message-header">
-                        <strong data-user="${data.username}">${data.username}</strong>
-                        <span class="timestamp">${messageTime}</span>
-                    </div>
+                        ${m1 - m2 <= 5 ? '' : `<div class="message-header"><strong data-user="${data.username}">${data.username}</strong><span class="timestamp">${messageTime}</span></div>`}
                     <div class="message-bubble ${data.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${data.message}</p>
                     </div>
                     </div>
                 </div>`;
+            if(m1 - m2 > 5){
+                prevTime = tempTime;
+            }
+            prevDate = messageDate;
             messageList.appendChild(messageItem);
-            scrollToBottom();   
+            scrollToBottom();
         });
-    
+
 
         const messageInput = document.getElementById('message-input');
+
         function sendMessage() {
             const message = messageInput.value;
             const username = "{{ current_user.username }}";
-            const timestamp = new Date().toISOString();
+
+            const userTime = new Date().getHours(); // Get the user current hour 
+            const serverTime = new Date().getUTCHours(); // Get the server current hour
+            const timeDiff = userTime - serverTime; // Getting the diffrence between server and user
+            let timestamp = new Date(); // Let User Send The Message Time By Server Time
+            timestamp.setHours(timestamp.getHours() - timeDiff); // Set The Time Become Server Time
+
             if (message.trim()) {
-                console.log(`Sending message => ${message}`); 
-                socket.emit('send_message', { username: username, message: message, timestamp: timestamp });
+                console.log(`Sending message => ${message}`);
+                socket.emit('send_message', {
+                    username: username,
+                    message: message,
+                    timestamp: timestamp
+                });
                 messageInput.value = '';
             }
         }
@@ -97,4 +183,5 @@
         scrollToBottom();
     </script>
 </body>
+
 </html>

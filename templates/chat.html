@@ -34,12 +34,7 @@
         const messageList = document.getElementById('message-list');
  
         let prevTime = -69;
-        let prevDate = new Date().toLocaleDateString('en-Us', {
-            weekday: 'long',    
-            day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
+        let prevDate = 0;
             
             existingMessages.forEach(msg => {
                 const messageItem = document.createElement('li');
@@ -79,7 +74,7 @@
             <center>${prevDate === messageDate ? '' : messageDate}</center>
             <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
                 <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
-                    ${m1 - m2 <= 5 ? '' : `<div class="message-header"><strong data-user="${msg.username}">${msg.username}</strong><span class="timestamp">${messageTime}</span></div>`}
+                    ${m1 - m2 > 5 || prevDate != messageDate ? `<div class="message-header"><strong data-user="${msg.username}">${msg.username}</strong><span class="timestamp">${messageTime}</span></div>` : ''}
                     <div class="message-bubble ${msg.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${msg.message}</p>
                     </div>
@@ -127,7 +122,7 @@
             <center>${prevDate === messageDate ? '' : messageDate}</center>
                 <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-container ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
-                        ${m1 - m2 <= 5 ? '' : `<div class="message-header"><strong data-user="${data.username}">${data.username}</strong><span class="timestamp">${messageTime}</span></div>`}
+                        ${m1 - m2 > 5 || prevDate != messageDate ? `<div class="message-header"><strong data-user="${data.username}">${data.username}</strong><span class="timestamp">${messageTime}</span></div>` : ''}
                     <div class="message-bubble ${data.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${data.message}</p>
                     </div>

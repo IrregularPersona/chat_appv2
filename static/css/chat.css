@@ -1,11 +1,23 @@
+:root {
+    --bg-primary: #e6f2ff;
+    --bg-secondary: #b3d9ff;
+    --bg-dark: #4da6ff;
+    --text-primary: #333;
+    --text-secondary: #0066cc;
+    --accent-color: #007bff;
+    --accent-hover: #0056b3;
+    --message-bg-self: #4da6ff;
+    --message-bg-other: #b3d9ff;
+}
+
 /* General Styling */
 body, button, input, textarea {
     font-family: 'Nunito', sans-serif !important;
 }
 
 body {
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     margin: 0;
     display: flex;
     justify-content: center;
@@ -13,12 +25,13 @@ body {
     height: 100vh;
 }
 
+
 h2 {
     text-align: center;
     padding: 10px;
-    background-color: #2b2b2b;
+    background-color: var(--bg-dark);
     margin: 0;
-    color: #ffffff;
+    color: white;
 }
 
 /* Chat Container */
@@ -29,11 +42,12 @@ h2 {
     height: 90vh;
     width: 60%;
     max-width: 800px;
-    background-color: #1e1e1e;
+    background-color: white;
     border-radius: 8px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
+
 /* Chat Content (Messages Area) */
 .chat-content {
     flex: 1;
@@ -73,7 +87,7 @@ h2 {
 
 .message-header strong {
     font-size: 0.9em;
-    color: #00e5ff;
+    color: var(--text-secondary);
     font-weight: 600;
 }
 
@@ -109,8 +123,8 @@ h2 {
     border-radius: 12px;
     width: fit-content;
     /* min-width: 70px; */
-    background-color: #333;
-    color: #d3d3d3;
+    background-color: var(--message-bg-other);
+    color: var(--text-primary);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     word-wrap: break-word;
     font-size: 0.9em;
@@ -118,7 +132,7 @@ h2 {
 }
 
 .message-bubble.self {
-    background-color: #2196F3;
+    background-color: var(--message-bg-self);
     color: white;
     text-align: end;
     /* align-self: flex-end; */
@@ -168,9 +182,9 @@ p {
 }
 
 .send-button {
-    background-color: #ffa726;
-    color: #ffffff;
-    border: none;
+    background-color: var(--accent-color);
+    border: 1px solid var(--bg-dark);
+    color: var(--text-primary);
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
@@ -178,22 +192,22 @@ p {
 }
 
 .send-button:hover {
-    background-color: #ff9800;
+    background-color: var(--accent-hover);
 }
 
 /* Logout Link */
 .logout {
     text-align: center;
     display: block;
-    color: #ffa726;
+    color: var(--accent-color);
+    background-color: var(--bg-secondary);
     text-decoration: none;
     padding: 10px;
-    background-color: #2b2b2b;
     border-top: 1px solid #444;
 }
 
 .logout:hover {
-    color: #ff9800;
+    color: var(--accent-hover);
 }
 
 /* Custom Scrollbar Styling */

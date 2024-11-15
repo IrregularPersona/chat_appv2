@@ -77,7 +77,7 @@ def chat():
     
     existing_messages = [
         {
-            'username': msg.user.username, 
+            'username': msg.global_user.username, 
             'message': msg.text, 
             'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
         } for msg in messages

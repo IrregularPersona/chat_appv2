@@ -15,3 +15,17 @@ class RegisterForm(FlaskForm):
 class MessageForm(FlaskForm):
     text = TextAreaField('Message', validators=[DataRequired(), Length(max=500)])
     submit = SubmitField('Send')
+
+class DirectMessageForm(FlaskForm):
+    recipient = StringField('Recipient', validators=[DataRequired()])
+    message = TextAreaField('Message', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('Send Direct Message')
+
+class GroupChatForm(FlaskForm):
+    name = StringField('Group Name', validators=[DataRequired()])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('Create Group Chat')
+
+class GroupMessageForm(FlaskForm):
+    message = TextAreaField('Message', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('Send Group Message')

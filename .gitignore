@@ -2,3 +2,4 @@
 /instance/chat.db
 /__pycache__
 .env
+/instance/chat.db-journal

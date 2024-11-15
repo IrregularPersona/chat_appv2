@@ -1,13 +1,8 @@
 :root {
-    --bg-primary: rgb(234, 236, 204); /* Light background */
-    --bg-secondary: rgb(195, 226, 194); /* Secondary background */
-    --bg-dark: rgb(205, 141, 122); /* Darker elements */
-    --text-primary: rgb(195, 226, 194); /* Primary text color */
-    --text-secondary: rgb(219, 204, 149); /* Secondary text color */
-    --accent-color: rgb(205, 141, 122); /* Accent color */
-    --accent-hover: rgb(219, 204, 149); /* Hover color */
-    --message-bg-self: rgb(195, 226, 194); /* Message background for self */
-    --message-bg-other: rgb(234, 236, 204); /* Message background for others */
+    --primary: #111111;
+    --secondary: #2F2F2F;
+    --primary-light: #F6F6F6;
+    --button-s: #FFCB74; 
 }
 
 body, .form-container {
@@ -15,8 +10,8 @@ body, .form-container {
 }
 
 body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
+    background-color: var(--primary);
+    color: var(--primary-light);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +20,8 @@ body {
 }
 
 .form-container {
-    background-color: white;
+    /* background-color: white; */
+    background-color: var(--secondary);
     padding: 2em;
     border-radius: 8px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -42,14 +38,14 @@ h2 {
     width: 90%;
     padding: 0.5em;
     margin: 0.55em 0;
-    background-color: white;
-    color: var(--text-primary);
-    border: 1px solid var(--bg-dark);
+    background-color: var(--primary-light);
+    color: var(--secondary);
+    border: 1px solid var(--secondary);
     border-radius: 4px;
 }
 
 .form-input:focus {
-    border-color: var(--accent-color);
+    border-color: var(--button-s);
     outline: none;
 }
 
@@ -57,29 +53,29 @@ h2 {
     width: 65%;
     margin-top: 0.5em;
     padding: 0.5em;
-    background-color: var(--accent-color);
-    color: white;
+    background-color: var(--button-s);
+    color: var(--primary-light);
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: 0.3s ease-in-out;
 }
 
 .form-button:hover {
-    background-color: var(--accent-hover);
+    filter: brightness(50%);
 }
 
 a {
-    color: #ffa726;
+    color: var(--button-s);
     text-decoration: none;
 }
 
 a:hover {
     text-decoration: underline;
-    color: #ff9800;
+    color: var(--button-s);
 }
 
 p {
-    color: #cccccc; 
+    color: var(--primary-light);
 }
 

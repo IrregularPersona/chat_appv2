@@ -1,5 +1,5 @@
 :root {
-    --bg-primary: #e6f2ff;
+    /* --bg-primary: #e6f2ff;
     --bg-secondary: #b3d9ff;
     --bg-dark: #4da6ff;
     --text-primary: #333;
@@ -7,7 +7,11 @@
     --accent-color: #007bff;
     --accent-hover: #0056b3;
     --message-bg-self: #4da6ff;
-    --message-bg-other: #b3d9ff;
+    --message-bg-other: #b3d9ff; */
+    --primary: #111111;
+    --secondary: #2F2F2F;
+    --primary-light: #F6F6F6;
+    --button-s: #FFCB74; 
 }
 
 /* General Styling */
@@ -16,10 +20,10 @@ body, button, input, textarea {
 }
 
 body {
-    background-color: var(--bg-primary);
-    color: var(--text-primary);
-
+    background-color: var(--primary);
+    color: var(--button-s);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -30,9 +34,9 @@ body {
 h2 {
     text-align: center;
     padding: 10px;
-    background-color: var(--bg-dark);
+    background-color: var(--primary);
     margin: 0;
-    color: white;
+    color: var(--primary-light);
 }
 
 /* Chat Container */
@@ -43,9 +47,9 @@ h2 {
     height: 90vh;
     width: 60%;
     max-width: 800px;
-    background-color: white;
+    background-color: var(--secondary);
     border-radius: 8px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 20px var(--primary);
     overflow: hidden;
 }
 
@@ -54,7 +58,7 @@ h2 {
     flex: 1;
     overflow-y: auto;
     padding: 10px;
-    border-bottom: 1px solid #444;
+    /* border-bottom: 1px solid var(--primary); */
     display: flex;
     flex-direction: column;
     justify-content: flex-end; 
@@ -96,7 +100,7 @@ h2 {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #9e9e9e;
+    color: var(--button-s);
     font-size: 0.85em;
     margin-bottom: 5px;
     width: fit-content;
@@ -113,7 +117,7 @@ h2 {
 
 .timestamp {
     font-size: 0.75em;
-    color: #bbbbbb;
+    color: var(--primary-light);
     margin-left: 0.2rem;
     vertical-align: middle;
 }
@@ -124,26 +128,23 @@ h2 {
     border-radius: 12px;
     width: fit-content;
     /* min-width: 70px; */
-    background-color: var(--message-bg-other);
-    color: var(--text-primary);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    background-color: var(--secondary);
+    color: var(--primary-light);
+    box-shadow: 0 2px 5px var(--primary);
     word-wrap: break-word;
     font-size: 0.9em;
     max-width: 80%;
 }
 
 .message-bubble.self {
-    background-color: var(--message-bg-self);
-    color: white;
+    background-color: var(--secondary);
+    color: var(--primary-light);
     text-align: end;
-    /* align-self: flex-end; */
-    /* margin-left: 70%; */
-    /* max-width: 70% !important; */
 }
 
 .message-bubble:not(.self) {
-    background-color: #424242;
-    color: #e0e0e0;
+    background-color: var(--secondary);
+    color: var(--primary-light);
     /* margin-right: 2.5%; */
     max-width: 40% !important;
 }
@@ -166,49 +167,54 @@ p {
     display: flex;
     align-items: center;
     padding: 10px;
-    background-color: #2b2b2b;
-    border-top: 1px solid #444;
+    background-color: var(--secondary);
+    border-top: 1px solid var(--secondary);
 }
 
 /* Input Box and Send Button */
 .input-box {
     flex: 1;
     padding: 10px;
-    background-color: #3a3a3a;
-    border: 1px solid #555;
+    background-color: var(--secondary);
+    border: 1px solid var(--button-s);
     border-radius: 5px;
-    color: #e0e0e0;
+    color: var(--primary-light);
     resize: none;
     margin-right: 10px;
+    outline: none;
 }
 
 .send-button {
-    background-color: var(--accent-color);
-    border: 1px solid var(--bg-dark);
-    color: var(--text-primary);
+    background-color: var(--button-s);
+    border: 1px solid var(--button-s);
+    color: var(--primary-light);
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
     font-weight: 600;
+    transition: 0.3s ease-in-out;
 }
 
 .send-button:hover {
-    background-color: var(--accent-hover);
+    filter: brightness(50%);
 }
 
 /* Logout Link */
 .logout {
     text-align: center;
     display: block;
-    color: var(--accent-color);
-    background-color: var(--bg-secondary);
+    color: var(--primary-light);
+    background-color: var(--button-s);
     text-decoration: none;
-    padding: 10px;
-    border-top: 1px solid #444;
+    padding: 1rem 2rem;
+    border-top: 1px solid var(--secondary);
+    transition: 0.3s ease-in-out;
+    border-radius: 2rem;
+    margin: 2rem;
 }
 
 .logout:hover {
-    color: var(--accent-hover);
+    filter: brightness(50%);
 }
 
 /* Custom Scrollbar Styling */
@@ -222,5 +228,5 @@ p {
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #2b2b2b;
+    background-color: var(--secondary);
 }

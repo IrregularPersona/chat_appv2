@@ -11,8 +11,8 @@
 </head>
 
 <body>
+    <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
     <div class="chat-container" data-username="{{ current_user.username }}">
-        <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
         <div class="chat-content">
             <div class="messages">
                 <ul id="message-list">
@@ -24,8 +24,8 @@
                 <button onclick="sendMessage()" class="send-button">Send</button>
             </div>
         </div>
-        <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
+    <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     <script>

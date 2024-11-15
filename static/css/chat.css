@@ -18,11 +18,12 @@ body, button, input, textarea {
 body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    margin: 0;
+
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
 

@@ -1,10 +1,22 @@
+:root {
+    --bg-primary: rgb(234, 236, 204); /* Light background */
+    --bg-secondary: rgb(195, 226, 194); /* Secondary background */
+    --bg-dark: rgb(205, 141, 122); /* Darker elements */
+    --text-primary: rgb(195, 226, 194); /* Primary text color */
+    --text-secondary: rgb(219, 204, 149); /* Secondary text color */
+    --accent-color: rgb(205, 141, 122); /* Accent color */
+    --accent-hover: rgb(219, 204, 149); /* Hover color */
+    --message-bg-self: rgb(195, 226, 194); /* Message background for self */
+    --message-bg-other: rgb(234, 236, 204); /* Message background for others */
+}
+
 body, .form-container {
     font-family: 'Nunito', sans-serif !important;
 }
 
 body {
-    background-color: #121212; 
-    color: #e0e0e0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,31 +25,31 @@ body {
 }
 
 .form-container {
-    background-color: #1e1e1e; 
+    background-color: white;
     padding: 2em;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.6); 
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
 }
 
 h2 {
     margin-bottom: 1em;
-    color: #ffffff;
+    color: var(--text-secondary);
 }
 
 .form-input {
     width: 90%;
     padding: 0.5em;
     margin: 0.55em 0;
-    background-color: #333;
-    color: #e0e0e0; 
-    border: 1px solid #555; 
+    background-color: white;
+    color: var(--text-primary);
+    border: 1px solid var(--bg-dark);
     border-radius: 4px;
 }
 
 .form-input:focus {
-    border-color: #ffa726; 
+    border-color: var(--accent-color);
     outline: none;
 }
 
@@ -45,8 +57,8 @@ h2 {
     width: 65%;
     margin-top: 0.5em;
     padding: 0.5em;
-    background-color: #ffa726; 
-    color: #ffffff;
+    background-color: var(--accent-color);
+    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -54,7 +66,7 @@ h2 {
 }
 
 .form-button:hover {
-    background-color: #ff9800; 
+    background-color: var(--accent-hover);
 }
 
 a {

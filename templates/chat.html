@@ -7,8 +7,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
 </head>
 <body>
     <div class="chat-container" data-username="{{ current_user.username }}">
@@ -16,7 +14,7 @@
         <div class="chat-content">
             <div class="messages">
                 <ul id="message-list">
-
+                    
                 </ul>
             </div>
             <div class="input-form">
@@ -26,6 +24,8 @@
         </div>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     <script>
         const socket = io.connect();
         const existingMessages = {{ existing_messages | tojson | safe }};
@@ -35,12 +35,14 @@
             const messageTime = new Date(msg.timestamp).toLocaleTimeString();
             messageItem.innerHTML = `
                 <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
+                    <div class="message-container ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-header">
                         <strong data-user="${msg.username}">${msg.username}</strong>
                         <span class="timestamp">${messageTime}</span>
                     </div>
                     <div class="message-bubble ${msg.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${msg.message}</p>
+                    </div>
                     </div>
                 </div>`;
             messageList.appendChild(messageItem);
@@ -51,6 +53,7 @@
             const messageTime = convertToGMTPlus7(data.timestamp);
             messageItem.innerHTML = `
                 <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
+                    <div class="message-container ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
                     <div class="message-header">
                         <strong data-user="${data.username}">${data.username}</strong>
                         <span class="timestamp">${messageTime}</span>
@@ -58,13 +61,15 @@
                     <div class="message-bubble ${data.username === "{{ current_user.username }}" ? 'self' : ''}">
                         <p>${data.message}</p>
                     </div>
+                    </div>
                 </div>`;
             messageList.appendChild(messageItem);
             scrollToBottom();   
         });
     
+
+        const messageInput = document.getElementById('message-input');
         function sendMessage() {
-            const messageInput = document.getElementById('message-input');
             const message = messageInput.value;
             const username = "{{ current_user.username }}";
             const timestamp = new Date().toISOString();

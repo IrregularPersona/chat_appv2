@@ -65,24 +65,31 @@ def logout():
 @app.route('/chat', methods=['GET', 'POST'])
 @login_required
 def chat():
-    form = MessageForm()
-    if form.validate_on_submit():
-        message = Message(text=form.text.data, user=current_user)
-        db.session.add(message)
-        db.session.commit()
-        socketio.emit('new_message', {
-            'username': current_user.username,
-            'text': form.text.data,
-            'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
-        }, namespace='/chat')
-        form.text.data = ''
-        return redirect(url_for('chat'))
     messages = Message.query.order_by(Message.timestamp.asc()).all()
-    return render_template('chat.html', form=form, messages=messages)
+    existing_messages = [
+        {
+            'username': msg.user.username, 
+            'message': msg.text, 
+            'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        } for msg in messages
+    ]
+    
+    return render_template('chat.html', existing_messages=existing_messages)
 
 @socketio.on('send_message')
 def handle_message(data):
-    emit('receive_message', data, broadcast=True)
+    user = User.query.filter_by(username=data['username']).first()
+    
+    if user:
+        message = Message(text=data['message'], user=user)
+        db.session.add(message)
+        db.session.commit()
+
+        emit('receive_message', {
+            'username': data['username'],
+            'message': data['message'],
+            'timestamp': data['timestamp']
+        }, broadcast=True)
 
 @socketio.on('connect', namespace='/chat')
 def handle_connect():

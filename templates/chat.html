@@ -16,35 +16,80 @@
         <div class="chat-content">
             <div class="messages">
                 <ul id="message-list">
-                    
+
                 </ul>
             </div>
-            <textarea id="message-input" placeholder="Type your message here..."></textarea>
-            <button onclick="sendMessage()">Send</button>
+            <div class="input-form">
+                <textarea id="message-input" class="input-box" placeholder="Type your message here..."></textarea>
+                <button onclick="sendMessage()" class="send-button">Send</button>
+            </div>
         </div>
         <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     </div>
     <script>
         const socket = io.connect();
-    
-        // Listen for messages from the server
-        socket.on('receive_message', (data) => {
-            const messageList = document.getElementById('message-list');
+        const existingMessages = {{ existing_messages | tojson | safe }};
+        const messageList = document.getElementById('message-list');
+        existingMessages.forEach(msg => {
             const messageItem = document.createElement('li');
-            messageItem.innerHTML = `<strong>${data.username}</strong>: ${data.message}`;
+            const messageTime = new Date(msg.timestamp).toLocaleTimeString();
+            messageItem.innerHTML = `
+                <div class="message ${msg.username === "{{ current_user.username }}" ? 'right' : ''}">
+                    <div class="message-header">
+                        <strong data-user="${msg.username}">${msg.username}</strong>
+                        <span class="timestamp">${messageTime}</span>
+                    </div>
+                    <div class="message-bubble ${msg.username === "{{ current_user.username }}" ? 'self' : ''}">
+                        <p>${msg.message}</p>
+                    </div>
+                </div>`;
             messageList.appendChild(messageItem);
+        });
+
+        socket.on('receive_message', (data) => {
+            const messageItem = document.createElement('li');
+            const messageTime = convertToGMTPlus7(data.timestamp);
+            messageItem.innerHTML = `
+                <div class="message ${data.username === "{{ current_user.username }}" ? 'right' : ''}">
+                    <div class="message-header">
+                        <strong data-user="${data.username}">${data.username}</strong>
+                        <span class="timestamp">${messageTime}</span>
+                    </div>
+                    <div class="message-bubble ${data.username === "{{ current_user.username }}" ? 'self' : ''}">
+                        <p>${data.message}</p>
+                    </div>
+                </div>`;
+            messageList.appendChild(messageItem);
+            scrollToBottom();   
         });
     
         function sendMessage() {
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value;
             const username = "{{ current_user.username }}";
+            const timestamp = new Date().toISOString();
             if (message.trim()) {
-                // Emit a message to the server
-                socket.emit('send_message', { username: username, message: message });
+                console.log(`Sending message => ${message}`); 
+                socket.emit('send_message', { username: username, message: message, timestamp: timestamp });
                 messageInput.value = '';
             }
         }
+
+
+        messageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault(); // Prevent default Enter behavior
+                sendMessage();
+            }
+            if (event.key === 'Enter' && event.shiftKey) {
+                event.preventDefault();
+                messageInput.value += '\n';
+            }
+        });
+
+        // Send button click handler
+        document.querySelector('.send-button').addEventListener('click', sendMessage);
+        scrollToBottom();
     </script>
 </body>
 </html>

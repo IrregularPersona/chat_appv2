@@ -16,9 +16,10 @@ and this should work instantly
 
 ### TODO:
 - [X] Login/Logout/Register
-- [X] Message Timestamp
+- [X] Message Timestamp (GMT +7)
 - [X] Message Bubbles
+- [ ] Message Bubble Formatting
 - [X] Messages to DB
-- [ ] Real-time update of messages
+- [X] Real-time update of messages
 - [X] Auto-Scroll per new message
 - [ ] Color change between Self and other user

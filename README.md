@@ -18,8 +18,14 @@ and this should work instantly
 - [X] Login/Logout/Register
 - [X] Message Timestamp (GMT +7)
 - [X] Message Bubbles
-- [ ] Message Bubble Formatting
+- [X] Message Bubble Formatting
 - [X] Messages to DB
 - [X] Real-time update of messages
 - [X] Auto-Scroll per new message
 - [ ] Color change between Self and other user
+- [ ] E2E - Encryption
+- [ ] User Profile(?)
+- [ ] Grouping messages per User, per given amount of time
+- [ ] Chatrooms
+- [ ] User Permissions in Chatrooms (Require Chatrooms)
+- [ ] File/Image Attachments 

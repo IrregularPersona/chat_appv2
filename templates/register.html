@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
     <div class="form-container">
         <h2>Register</h2>
         <form method="POST" action="{{ url_for('register') }}">
@@ -16,6 +21,7 @@
             <div>
                 {{ form.username.label }}
                 {{ form.username(class="form-input") }}
+                <div id="username-feedback" class="input-feedback"></div>
             </div>
             <div>
                 {{ form.password.label }}
@@ -27,5 +33,43 @@
         </form>
         <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
     </div>
+
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
+    <script>
+        const usernameInput = document.querySelector('input[name="username"]');
+        const feedbackDiv = document.getElementById('username-feedback');
+        let timeout = null;
+
+        usernameInput.addEventListener('input', (e) => {
+            clearTimeout(timeout);
+            
+            timeout = setTimeout(() => {
+                const username = e.target.value;
+                if (username.length < 2) {
+                    feedbackDiv.textContent = 'Username must be at least 2 characters long';
+                    feedbackDiv.className = 'input-feedback error-feedback';
+                    return;
+                }
+                
+                fetch('/check_username', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        feedbackDiv.textContent = 'Username already taken';
+                        feedbackDiv.className = 'input-feedback error-feedback';
+                    } else {
+                        feedbackDiv.textContent = 'Username available';
+                        feedbackDiv.className = 'input-feedback success-feedback';
+                    }
+                });
+            }, 500);
+        });
+    </script>
 </body>
 </html>

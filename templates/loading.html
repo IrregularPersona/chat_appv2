@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Loading...</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="loading-overlay" style="display: flex;">
+        <div class="loading-spinner"></div>
+        <div class="loading-message" id="loadingMessage">{{ message }}</div>
+    </div>
+
+    <script>
+        setTimeout(() => {
+            window.location.href = "{{ redirect_url }}";
+        }, 2000);
+    </script>
+</body>
+</html> 

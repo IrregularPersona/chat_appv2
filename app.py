@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash, request
+from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
@@ -31,13 +31,21 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
-            flash('Logged in successfully!', 'success')
-            return redirect(url_for('chat'))
+        
+        if not user:
+            return redirect(url_for('loading',
+                                  message='Username does not exist.',
+                                  redirect_url=url_for('login')))
+        elif not bcrypt.check_password_hash(user.password, form.password.data):
+            return redirect(url_for('loading',
+                                  message='Incorrect password.',
+                                  redirect_url=url_for('login')))
         else:
-            flash('Login Unsuccessful. Check username and password.', 'danger')
+            login_user(user)
+            return redirect(url_for('loading',
+                                  message='Logging in!',
+                                  redirect_url=url_for('chat')))
+            
     return render_template('login.html', form=form)
 
 
@@ -49,24 +57,22 @@ with app.app_context():
 def register():
     form = RegisterForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            form.password.data).decode('utf-8')
-
-        user = User.create_user(
-            username=form.username.data,
-            password=hashed_password
-        )
-
+        if User.query.filter_by(username=form.username.data).first():
+            return redirect(url_for('register'))
+        
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        user = User.create_user(form.username.data, hashed_password)
+        
         try:
             db.session.add(user)
             db.session.commit()
-            flash('Account created successfully! Please log in.', 'success')
-            return redirect(url_for('login'))
+            return redirect(url_for('loading',
+                                  message='Account created successfully!',
+                                  redirect_url=url_for('login')))
         except IntegrityError:
             db.session.rollback()
-            flash(
-                'Username already exists. Please choose a different username.', 'danger')
-
+            return redirect(url_for('register'))
+    
     return render_template('register.html', form=form)
 
 
@@ -74,8 +80,9 @@ def register():
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('login'))
+    return redirect(url_for('loading', 
+                          message='Logging out!',
+                          redirect_url=url_for('login')))
 
 
 @app.route('/chat', methods=['GET', 'POST'])
@@ -224,6 +231,20 @@ def handle_connect():
 @socketio.on('disconnect', namespace='/chat')
 def handle_disconnect():
     print(f'{request.sid} disconnected from the chat namespace')
+
+
+@app.route('/check_username', methods=['POST'])
+def check_username():
+    username = request.json.get('username')
+    user = User.query.filter_by(username=username).first()
+    return jsonify({'exists': user is not None})
+
+
+@app.route('/loading')
+def loading():
+    message = request.args.get('message', 'Loading...')
+    redirect_url = request.args.get('redirect_url', url_for('login'))
+    return render_template('loading.html', message=message, redirect_url=redirect_url)
 
 
 if __name__ == '__main__':

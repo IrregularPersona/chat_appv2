@@ -1,8 +1,19 @@
-:root {
+:root[data-theme="light"] {
+    --primary: #ffffff;
+    --secondary: #f0f0f0;
+    --primary-light: #333333;
+    --button-s: #007bff;
+    --error: #dc3545;
+    --success: #28a745;
+}
+
+:root[data-theme="dark"] {
     --primary: #111111;
     --secondary: #2F2F2F;
     --primary-light: #F6F6F6;
-    --button-s: #FFCB74; 
+    --button-s: #FFCB74;
+    --error: #ff4d4d;
+    --success: #4dff4d;
 }
 
 body, .form-container {
@@ -77,5 +88,72 @@ a:hover {
 
 p {
     color: var(--primary-light);
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 50%;
+    background: var(--button-s);
+    cursor: pointer;
+    border: none;
+    color: var(--primary-light);
+}
+
+.input-feedback {
+    font-size: 0.8em;
+    margin-top: -8px;
+    margin-bottom: 8px;
+}
+
+.error-feedback {
+    color: var(--error);
+}
+
+.success-feedback {
+    color: var(--success);
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid var(--secondary);
+    border-top: 5px solid var(--button-s);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-message {
+    color: var(--primary-light);
+    font-size: 1.2em;
+    text-align: center;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 

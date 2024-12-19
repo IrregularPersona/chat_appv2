@@ -2,7 +2,7 @@
 
 Running the app for the first time is easy. Theres a few step you have to take.
 
-1. Making a venv so that everything is isolated and you can install packages without affecting the rest of your system. You can do this by running 
+1. Making a venv so that everything is isolated and you can install packages without affecting the rest of your system. You can do this by running this command in your terminal:
         
     ``` python -m venv venv ```
 
@@ -25,7 +25,7 @@ and this should work instantly
 - [ ] Color change between Self and other user
 - [ ] E2E - Encryption
 - [ ] User Profile(?)
-- [ ] Grouping messages per User, per given amount of time
+- [X] Grouping messages per User, per given amount of time
 - [ ] Chatrooms
 - [ ] User Permissions in Chatrooms (Require Chatrooms)
 - [ ] File/Image Attachments 

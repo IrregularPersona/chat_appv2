@@ -1,16 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <title>Chat Room</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <div class="sidebar-menu-section">
+                <div class="sidebar-menu-title">Chats</div>
+                <li><a href="{{ url_for('chat') }}"><i class="fas fa-globe"></i> Global Chat</a></li>
+            </div>
+            <div class="sidebar-menu-section">
+                <div class="sidebar-menu-title">Your Groups</div>
+                <div class="sidebar-menu-groups">
+                    {% for membership in current_user.group_memberships %}
+                    <li><a href="{{ url_for('group_chat', group_id=membership.group.id) }}">
+                        <i class="fas fa-users"></i> {{ membership.group.name }}
+                    </a></li>
+                    {% endfor %}
+                </div>
+                <button class="create-group-btn" onclick="window.location.href='{{ url_for('create_group') }}'">
+                    <i class="fas fa-plus"></i> Create Group
+                </button>
+            </div>
+            <li><a href="{{ url_for('profile') }}"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
     <h2>Welcome to the Chat, {{ current_user.username }}!</h2>
     <div class="chat-container" data-username="{{ current_user.username }}">
         <div class="chat-content">
@@ -25,7 +55,6 @@
             </div>
         </div>
     </div>
-    <a href="{{ url_for('logout') }}" class="logout">Logout</a>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     <script>

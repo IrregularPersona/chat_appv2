@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Group</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <div class="sidebar-menu-section">
+                <div class="sidebar-menu-title">Chats</div>
+                <li><a href="{{ url_for('chat') }}"><i class="fas fa-globe"></i> Global Chat</a></li>
+            </div>
+            <div class="sidebar-menu-section">
+                <div class="sidebar-menu-title">Your Groups</div>
+                <div class="sidebar-menu-groups">
+                    {% for membership in current_user.group_memberships %}
+                    <li><a href="{{ url_for('group_chat', group_id=membership.group.id) }}">
+                        <i class="fas fa-users"></i> {{ membership.group.name }}
+                    </a></li>
+                    {% endfor %}
+                </div>
+                <button class="create-group-btn" onclick="showCreateGroupModal()">
+                    <i class="fas fa-plus"></i> Create Group
+                </button>
+            </div>
+            <li><a href="{{ url_for('profile') }}"><i class="fas fa-user"></i> Profile</a></li>
+            <li><a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="modal" id="createGroupModal">
+        <div class="modal-content">
+            <h3>Create New Group</h3>
+            <form method="POST" action="{{ url_for('create_group') }}">
+                {{ form.hidden_tag() }}
+                <div>
+                    {{ form.name.label }}
+                    {{ form.name(class="form-input") }}
+                </div>
+                <div>
+                    {{ form.description.label }}
+                    {{ form.description(class="form-input") }}
+                </div>
+                <div class="member-input">
+                    <label>Add Members (User IDs, comma-separated)</label>
+                    <input type="text" name="member_ids" class="form-input" placeholder="e.g., 1234567890, 0987654321">
+                </div>
+                <div>
+                    {{ form.submit(class="form-button") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
+</body>
+</html> 

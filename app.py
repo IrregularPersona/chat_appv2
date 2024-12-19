@@ -175,23 +175,55 @@ def create_group():
         db.session.add(new_group)
         db.session.flush()
 
-        membership = GroupChatMembership(
+        # Add creator as admin
+        creator_membership = GroupChatMembership(
             user_id=current_user.id,
             group_id=new_group.id,
             role='admin'
         )
+        db.session.add(creator_membership)
 
-        db.session.add(membership)
+        # Add other members
+        member_ids = request.form.get('member_ids', '').split(',')
+        added_members = set()  # Keep track of already added members
+        
+        for member_id in member_ids:
+            member_id = member_id.strip()
+            if member_id:
+                # Skip if it's the creator's ID
+                if member_id == current_user.user_id:
+                    flash('You cannot add yourself as a member.', 'error')
+                    continue
+                
+                # Skip if this ID was already processed
+                if member_id in added_members:
+                    flash(f'Duplicate ID {member_id} was skipped.', 'warning')
+                    continue
+                
+                user = User.query.filter_by(user_id=member_id).first()
+                if user:
+                    membership = GroupChatMembership(
+                        user_id=user.id,
+                        group_id=new_group.id,
+                        role='member'
+                    )
+                    db.session.add(membership)
+                    added_members.add(member_id)
+                else:
+                    flash(f'User ID {member_id} not found.', 'error')
+                    db.session.rollback()
+                    return redirect(url_for('create_group'))
 
         try:
             db.session.commit()
-            flash('Group created successfully', 'success')
+            flash('Group created successfully!', 'success')
             return redirect(url_for('group_chat', group_id=new_group.id))
         except Exception as e:
             db.session.rollback()
-            flash('Error creating group', 'danger')
+            flash('An error occurred while creating the group.', 'error')
+            return redirect(url_for('create_group'))
 
-    return render_template('create_group.html', form=form)
+    return render_template('groups.html', form=form)
 
 
 @socketio.on('send_direct_messaage')
@@ -245,6 +277,64 @@ def loading():
     message = request.args.get('message', 'Loading...')
     redirect_url = request.args.get('redirect_url', url_for('login'))
     return render_template('loading.html', message=message, redirect_url=redirect_url)
+
+
+@app.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
+
+
+@app.route('/group/<int:group_id>')
+@login_required
+def group_chat(group_id):
+    group = GroupChat.query.get_or_404(group_id)
+    membership = GroupChatMembership.query.filter_by(
+        user_id=current_user.id,
+        group_id=group_id
+    ).first()
+
+    if not membership:
+        return redirect(url_for('chat'))
+
+    messages = GroupMessage.query.filter_by(group_id=group_id).order_by(GroupMessage.timestamp.asc()).all()
+    return render_template('group_chat.html', group=group, messages=messages)
+
+
+@socketio.on('send_group_message')
+def handle_group_message(data):
+    group_id = data['group_id']
+    message = data['message']
+    
+    # Check if user is member of the group
+    membership = GroupChatMembership.query.filter_by(
+        user_id=current_user.id,
+        group_id=group_id
+    ).first()
+    
+    if membership:
+        new_message = GroupMessage(
+            group_id=group_id,
+            sender_id=current_user.id,
+            message=message,
+            timestamp=datetime.utcnow()
+        )
+        
+        try:
+            db.session.add(new_message)
+            db.session.commit()
+            
+            # Emit to all group members
+            emit('receive_group_message', {
+                'group_id': group_id,
+                'username': current_user.username,
+                'message': message,
+                'timestamp': datetime.utcnow().strftime('%H:%M')
+            }, broadcast=True)
+            
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error saving group message: {e}")
 
 
 if __name__ == '__main__':
